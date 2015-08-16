@@ -1,29 +1,30 @@
 ---
 title: "Reproducible Research Assignment 1"
-author: "Mengyi"
+author: "Mxu"
 output: html_document
 
 ---
 Loading and preprocessing the data
 
-```{r}
+```{r, echo=TRUE}
 activity <- read.csv("C:/Users/mxu/Desktop/R/activity.csv")
 ```
 #What is mean total number of steps taken per day?
 1.Calculate the total number of steps taken per day
 
-```{r}
+```{r, echo=TRUE}
 total_step<-aggregate(activity$steps ,list (activity$date),FUN="sum")
 colnames(total_step)<-c("date", "total_step")
+mean(total_step)
 ```
 
 2.Make a histogram of the total number of steps taken each day
-```{r}
+```{r, echo=TRUE}
 pl<-hist(as.numeric(as.character(total_step$total_step)), main="histogram of total steps across days", xlab="total step")
 ```
 3.
 Calculate and report the mean and median of the total number of steps taken per day
-```{r}
+```{r, echo=TRUE}
 mean(total_step$total_step, na.rm=T)
 median(total_step$total_step, na.rm=T)
 ```
@@ -31,7 +32,7 @@ median(total_step$total_step, na.rm=T)
 #What is the average daily activity pattern?
 
 1.Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
-```{r}
+```{r, echo=TRUE}
 average_interval<-aggregate(activity$steps ,list (activity$interval),FUN="mean",na.rm=T )
 colnames(average_interval)<-c("interval", "average_steps")
 plot(average_interval$interval,average_interval$average_steps,  type = "l", main="average step for interval across all days")
@@ -39,22 +40,23 @@ plot(average_interval$interval,average_interval$average_steps,  type = "l", main
 
 
 2.Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-```{r}
+```{r, echo=TRUE}
 plot(average_interval$interval,average_interval$average_steps,  type = "l", main="average step for interval across all days")
 max_point<-average_interval[average_interval$average_steps==max(average_interval$average_steps),]
 points(max_point, pch = 20, col='red')
+max_point
 ```
 #Imputing missing values
 
 1.Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r}
+```{r, echo=TRUE}
 nrow(activity[activity$steps=='NA',])
 ```
 
 2.Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
 The strategy I used is to calculate the daily average steps and applied to the missing values.
-```{r}
+```{r, echo=TRUE}
 mean_each_day<-aggregate(activity$steps ,list (activity$date),FUN="mean")
 colnames(mean_each_day)<-c("date", "total_step")
 mean(mean_each_day$total_step, na.rm=T)  --37.3826
@@ -78,7 +80,7 @@ final_data<-rbind(no_missing_data,replace_data)
 
 4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r}
+```{r, echo=TRUE}
 aggre_fal<-aggregate(final_data$steps, list(final_data$date), FUN="sum")
 hist(aggre_fal$x, breaks=50, main="Histogram of total steps each day")
 mean(aggre_fal$x)--10766.19
@@ -89,7 +91,7 @@ median(aggre_fal$x)--10766.19
 
 
 1.Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
-```{r}
+```{r, echo=TRUE}
 final_data$date<-as.Date(final_data$date,"%Y-%m-%d")
 final_data$weekday<-weekdays(final_data$date)
 final_data$weekday<-as.factor(final_data$weekday)
@@ -109,7 +111,7 @@ avgSteps <- aggregate(final_data$steps,
 
 2.Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
-```{r}
+```{r, echo=TRUE}
 
 library(lattice)
 xyplot(avgSteps$x ~ avgSteps$interval | avgSteps$weekday, 
